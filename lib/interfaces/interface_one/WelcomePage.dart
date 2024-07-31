@@ -1,19 +1,22 @@
+// ignore_for_file: file_names
+
 import 'dart:ui';
 
+import 'package:eneo_ai_project/interfaces/interface_one/components/animated_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
-import 'components/animated_btn.dart';
-import 'components/sign_in_dialog.dart';
-
-class OnbodingScreen extends StatefulWidget {
-  const OnbodingScreen({super.key});
+class WelcomeScreen extends StatefulWidget {
+  const WelcomeScreen({super.key});
 
   @override
-  State<OnbodingScreen> createState() => _OnbodingScreenState();
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
 }
 
-class _OnbodingScreenState extends State<OnbodingScreen> {
+class _WelcomeScreenState extends State<WelcomeScreen> {
+//enable this file to recognise the _btnAnimationController
+//from the animated_btn file
+
   late RiveAnimationController _btnAnimationController;
 
   bool isShowSignInDialog = false;
@@ -30,8 +33,12 @@ class _OnbodingScreenState extends State<OnbodingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+//background color
+      backgroundColor: const Color.fromARGB(255, 140, 198, 64),
+//contents
       body: Stack(
         children: [
+//insert and position the spline.png image
           Positioned(
             width: MediaQuery.of(context).size.width * 1.7,
             left: 100,
@@ -40,21 +47,21 @@ class _OnbodingScreenState extends State<OnbodingScreen> {
               "assets/Backgrounds/Spline.png",
             ),
           ),
+//spline.png image blur filter
           Positioned.fill(
             child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-              child: const SizedBox(),
-            ),
+                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                child: const SizedBox()),
           ),
-          const RiveAnimation.asset(
-            "assets/RiveAssets/shapes.riv",
-          ),
+//insert the shapes.riv animation
+          const RiveAnimation.asset("assets/RiveAssets/shapes.riv"),
+//shapes.riv animation blur filter
           Positioned.fill(
             child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-              child: const SizedBox(),
-            ),
+                filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+                child: const SizedBox()),
           ),
+
           AnimatedPositioned(
             top: isShowSignInDialog ? -50 : 0,
             height: MediaQuery.of(context).size.height,
@@ -72,9 +79,9 @@ class _OnbodingScreenState extends State<OnbodingScreen> {
                       child: Column(
                         children: [
                           Text(
-                            "Learn design & code",
+                            "Bienvenue ,
                             style: TextStyle(
-                              fontSize: 60,
+                              fontSize: 20,
                               fontWeight: FontWeight.w700,
                               fontFamily: "Poppins",
                               height: 1.2,
@@ -88,6 +95,8 @@ class _OnbodingScreenState extends State<OnbodingScreen> {
                       ),
                     ),
                     const Spacer(flex: 2),
+//calling and defining the actions rule of the animated button
+//through the animated button controller
                     AnimatedBtn(
                       btnAnimationController: _btnAnimationController,
                       press: () {
@@ -99,10 +108,7 @@ class _OnbodingScreenState extends State<OnbodingScreen> {
                             setState(() {
                               isShowSignInDialog = true;
                             });
-                            showCustomDialog(
-                              context,
-                              onValue: (_) {},
-                            );
+
                             // showCustomDialog(
                             //   context,
                             //   onValue: (_) {

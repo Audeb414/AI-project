@@ -1,27 +1,13 @@
-//imported dependencies
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
-import 'package:flutter/cupertino.dart';
-
-//class creation
-class WelcomePage extends StatelessWidget {
-  const WelcomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Color.fromARGB(255, 11, 202, 91),
-    );
-  }
-}
 
 class AnimatedBtn extends StatelessWidget {
   const AnimatedBtn({
-    Key? key,
+    super.key,
     required RiveAnimationController btnAnimationController,
     required this.press,
-  })  : _btnAnimationController = btnAnimationController,
-        super(key: key);
+  }) : _btnAnimationController = btnAnimationController;
 
   final RiveAnimationController _btnAnimationController;
   final VoidCallback press;
@@ -45,12 +31,12 @@ class AnimatedBtn extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Icon(CupertinoIcons.arrow_right),
                   const SizedBox(width: 8),
                   Text(
-                    "Start the course",
+                    "SUIVANT",
                     style: Theme.of(context).textTheme.labelLarge,
-                  )
+                  ),
+                  const Icon(CupertinoIcons.arrow_right)
                 ],
               ),
             )
