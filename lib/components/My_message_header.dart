@@ -19,7 +19,7 @@ class _MyWidgetState extends State<HeatherSection> {
         children: [
           //const Padding(padding: EdgeInsets.all(5)),
           Image.asset(
-            'assets/eneo-logo.png',
+            'assets/images/eneo.jpeg',
           ),
           /* Container(
             height: 70,
@@ -56,10 +56,15 @@ class _MyWidgetState extends State<HeatherSection> {
           ),
           const Spacer(),
 
-          const Icon(
-            Icons.notifications_active_outlined,
-            size: 20,
-            color: Colors.white,
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, '/notification');
+            },
+            child: const Icon(
+              Icons.notifications,
+              size: 20,
+              color: Colors.white,
+            ),
           ),
           const Icon(
             Icons.settings,

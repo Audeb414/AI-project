@@ -57,7 +57,11 @@ class _notificationState extends State<notification> {
             padding: EdgeInsets.all(10),
             child: Row(
               children: [
-                Icon(Icons.arrow_back),
+                GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/home');
+                    },
+                    child: Icon(Icons.arrow_back)),
                 SizedBox(
                   width: 10,
                 ),

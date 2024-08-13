@@ -1,6 +1,6 @@
-import 'package:eneo_ai_page3/animation.dart';
-import 'package:eneo_ai_page3/heather.dart';
-import 'package:eneo_ai_page3/search.dart';
+import 'package:eneo_ai_project/components/My_message_animation.dart';
+import 'package:eneo_ai_project/components/My_message_header.dart';
+import 'package:eneo_ai_project/components/My_message_input.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -46,7 +46,7 @@ class _MyWidgetState extends State<HomePage> {
                                 borderRadius: BorderRadius.circular(10),
                                 image: const DecorationImage(
                                   fit: BoxFit.cover,
-                                  image: AssetImage('assets/eneo-logo.png'),
+                                  image: AssetImage('assets/images/eneo.jpeg'),
                                 ),
                               ),
                             ),
@@ -55,7 +55,7 @@ class _MyWidgetState extends State<HomePage> {
                             height: 20,
                           ),
                           const Text(
-                            'lorem eprfiefnjifn feikjfpqjfk fozijfjiorijfr nihyufrviuoin hhgèrr-geytudtvug hgfyubtgf bfghdtyif hfiubhh',
+                            "The following line ensures that the Material Icons font is included with your application, so that you can use the icons in the material ",
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.white,
