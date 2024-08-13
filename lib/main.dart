@@ -1,5 +1,7 @@
-import 'package:eneo_ai_project/components/composants/pages/connexion.dart';
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
+import 'pages/notification.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: connexionPage(),
+      home: notification(),
     );
   }
 }

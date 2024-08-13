@@ -35,7 +35,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
-  rive: ^0.13.4
+  rive: ^0.13.12
   flutter_svg: ^2.0.9
 
 dev_dependencies:
@@ -65,10 +65,10 @@ flutter:
     - assets/animations/
     - assets/icons/
     - assets/fonts/
-    -assets/images/
+    - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/assets-and-images/#resolution-aware
+  # https://flutter.dev/assets-and-images/#resolution-aware.
 
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
@@ -78,17 +78,17 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example
-  fonts:
-    - family: Poppins
-      fonts:
-        - asset: fonts/Poppins-Bold.ttf
-          weight: 700
-        - asset: fonts/Poppins-Medium.ttf
-          weight: 500
-        - asset: fonts/Poppins-Regular.ttf
-          weight: 400
-        - asset: fonts/Poppins-SemiBold.ttf
-          weight: 600
+  #fonts:
+   # - family: Poppins
+    #  fonts:
+     #   - asset: fonts/Poppins-Bold.ttf
+      #    weight: 700
+       # - asset: fonts/Poppins-Medium.ttf
+        #  weight: 500
+        #- asset: fonts/Poppins-Regular.ttf
+         # weight: 400
+        #- asset: fonts/Poppins-SemiBold.ttf
+        #  weight: 600
   # fonts:
   #   - family: Schyler
   #     fonts:
