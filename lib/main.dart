@@ -22,10 +22,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: InscriptionPage(),
       routes: {
-        '/home': (contetx) => HomePage(),
-        '/notification': (contetx) => notification(),
-        '/register': (contetx) => connexionPage(),
-        '/login': (contetx) => InscriptionPage(),
+        '/home': (context) => HomePage(),
+        '/notification': (context) => notification(),
+        '/login': (context) => connexionPage(),
+        '/register': (context) => InscriptionPage(),
       },
     );
   }
