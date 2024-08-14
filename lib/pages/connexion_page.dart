@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import '../components/My_button.dart';
-import '../components/TextField.dart';
+import '../components/My_button_auth.dart';
+import '../components/My_textfield_auth.dart';
 
 class connexionPage extends StatelessWidget {
   final TextEditingController _numeroController = TextEditingController();
@@ -59,11 +59,15 @@ class connexionPage extends StatelessWidget {
                   "vous n'avez pas de compte?",
                   style: TextStyle(color: Colors.white),
                 ),
-                Text("         connexion",
+                GestureDetector(
+                   onTap: () {
+                      Navigator.pushNamed(context, '/register');
+                    },
+                  child: Text("        s'incrire",
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w900,
-                    )),
+                    )),)
               ],
             ),
             const SizedBox(height: 70),
@@ -71,7 +75,9 @@ class connexionPage extends StatelessWidget {
             //button
             MyButton(
               text: "connexion",
-              onTap: () {},
+              onTap: () {
+                      Navigator.pushNamed(context, '/home');
+                    },
             )
           ],
         ),

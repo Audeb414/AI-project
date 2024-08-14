@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import '../components/My_button.dart';
-import '../components/TextField.dart';
+import '../components/My_button_auth.dart';
+import '../components/My_textfield_auth.dart';
 
 class InscriptionPage extends StatelessWidget {
   final TextEditingController _nomController = TextEditingController();
@@ -66,14 +66,19 @@ class InscriptionPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "vous n'avez pas de compte?",
+                  "vous a deja un compte?",
                   style: TextStyle(color: Colors.white),
                 ),
-                Text("         se connecter",
+                GestureDetector(
+                onTap: () {
+                      Navigator.pushNamed(context, '/login');
+                    },
+                child:Text("         se connecter",
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w900,
-                    )),
+                    ))
+                ),
               ],
             ),
             const SizedBox(height: 70),
@@ -81,7 +86,9 @@ class InscriptionPage extends StatelessWidget {
             //button
             MyButton(
               text: " inscription",
-              onTap: inscription,
+              onTap: () {
+                      Navigator.pushNamed(context, '/home');
+                    },
             )
           ],
         ),

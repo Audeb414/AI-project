@@ -4,6 +4,7 @@ import 'package:eneo_ai_project/pages/home_page.dart';
 import 'package:eneo_ai_project/pages/notification_page.dart';
 import 'package:eneo_ai_project/pages/welcome_page.dart';
 import 'package:flutter/material.dart';
+import 'package:eneo_ai'
 
 import 'pages/inscription_page.dart';
 
@@ -23,6 +24,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/home': (contetx) => HomePage(),
         '/notification': (contetx) => notification(),
+        '/register': (contetx) => connexionPage(),
+        '/login': (contetx) => InscriptionPage(),
       },
     );
   }
