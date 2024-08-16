@@ -65,7 +65,7 @@ class WelcomePage extends StatelessWidget {
 
                 Center(
                   child: Image.asset(
-                    "assets/icons/ai.png",
+                    "assets/images/ai.png",
                     height: 250,
                   ),
                 ),
