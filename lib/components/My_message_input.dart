@@ -11,9 +11,6 @@ class _MyWidgetState extends State<SearchSection> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      //width: 1000,
-      //height: 100,
-      //color: Colors.amber,
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(
         children: [

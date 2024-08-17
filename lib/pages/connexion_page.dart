@@ -60,14 +60,15 @@ class connexionPage extends StatelessWidget {
                   style: TextStyle(color: Colors.white),
                 ),
                 GestureDetector(
-                   onTap: () {
-                      Navigator.pushNamed(context, '/register');
-                    },
+                  onTap: () {
+                    Navigator.pushNamed(context, '/register');
+                  },
                   child: Text("        s'incrire",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w900,
-                    )),)
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w900,
+                      )),
+                )
               ],
             ),
             const SizedBox(height: 70),
@@ -76,8 +77,8 @@ class connexionPage extends StatelessWidget {
             MyButton(
               text: "connexion",
               onTap: () {
-                      Navigator.pushNamed(context, '/home');
-                    },
+                Navigator.pushNamed(context, '/dashboard');
+              },
             )
           ],
         ),

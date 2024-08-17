@@ -59,7 +59,7 @@ class _notificationState extends State<notification> {
               children: [
                 GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, '/home');
+                      Navigator.pushNamed(context, '/dashboard');
                     },
                     child: Icon(Icons.arrow_back)),
                 SizedBox(
@@ -70,7 +70,7 @@ class _notificationState extends State<notification> {
                   height: 50,
                 ),
                 SizedBox(
-                  width: 175,
+                  width: 150,
                 ),
                 Icon(Icons.notification_add_outlined),
               ],

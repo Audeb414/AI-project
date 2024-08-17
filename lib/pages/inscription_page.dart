@@ -70,15 +70,14 @@ class InscriptionPage extends StatelessWidget {
                   style: TextStyle(color: Colors.white),
                 ),
                 GestureDetector(
-                onTap: () {
+                    onTap: () {
                       Navigator.pushNamed(context, '/login');
                     },
-                child:Text("         se connecter",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w900,
-                    ))
-                ),
+                    child: Text("         se connecter",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                        ))),
               ],
             ),
             const SizedBox(height: 70),
@@ -87,8 +86,8 @@ class InscriptionPage extends StatelessWidget {
             MyButton(
               text: " inscription",
               onTap: () {
-                      Navigator.pushNamed(context, '/home');
-                    },
+                Navigator.pushNamed(context, '/dashboard');
+              },
             )
           ],
         ),

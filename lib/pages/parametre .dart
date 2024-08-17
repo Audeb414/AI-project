@@ -64,7 +64,14 @@ class Parametre extends StatelessWidget {
               ),
             ],
           ),
-          actions: [Icon(Icons.chevron_right_outlined)],
+          actions: [
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/dashboard');
+              },
+              child: Icon(Icons.chevron_right_outlined),
+            ),
+          ],
         ),
         body: SingleChildScrollView(
           child: Column(

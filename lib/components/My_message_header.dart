@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 
 class HeatherSection extends StatefulWidget {
@@ -17,19 +19,21 @@ class _MyWidgetState extends State<HeatherSection> {
       padding: const EdgeInsets.only(right: 5),
       child: Row(
         children: [
-          //const Padding(padding: EdgeInsets.all(5)),
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, '/dashboard');
+            },
+            child: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
           Image.asset(
             'assets/images/eneo.jpeg',
           ),
-          /* Container(
-            height: 70,
-            width: 100,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/eneo-logo.png'),
-              ),
-            ),
-          ),*/
           const SizedBox(
             width: 5,
           ),
@@ -53,23 +57,6 @@ class _MyWidgetState extends State<HeatherSection> {
                 ),
               ),
             ],
-          ),
-          const Spacer(),
-
-          GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, '/notification');
-            },
-            child: const Icon(
-              Icons.notifications,
-              size: 20,
-              color: Colors.white,
-            ),
-          ),
-          const Icon(
-            Icons.settings,
-            size: 20,
-            color: Colors.white,
           ),
         ],
       ),
