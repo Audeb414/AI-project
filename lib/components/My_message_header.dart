@@ -15,50 +15,54 @@ class _MyWidgetState extends State<HeatherSection> {
     return Container(
       width: 350,
       color: const Color.fromARGB(255, 27, 118, 187),
-      height: 50,
+      height: 60,
       padding: const EdgeInsets.only(right: 5),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, '/dashboard');
-            },
-            child: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
+      child: Padding(
+        padding: EdgeInsets.only(top: 10),
+        child: Row(
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/dashboard');
+              },
+              child: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
             ),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Image.asset(
-            'assets/images/eneo.jpeg',
-          ),
-          const SizedBox(
-            width: 5,
-          ),
-          const Column(
-            crossAxisAlignment: CrossAxisAlignment.end, //decaler vers la gauche
-            children: [
-              Padding(padding: EdgeInsets.only(top: 10)),
-              Text(
-                'IA ENEO',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+            SizedBox(
+              width: 10,
+            ),
+            Image.asset(
+              'assets/images/eneo.jpeg',
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            const Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.end, //decaler vers la gauche
+              children: [
+                Padding(padding: EdgeInsets.only(top: 10)),
+                Text(
+                  'IA ENEO',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              Text(
-                'writing...',
-                style: TextStyle(
-                  fontSize: 10,
-                  color: Color.fromARGB(255, 140, 198, 64),
+                Text(
+                  'writing...',
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: Color.fromARGB(255, 140, 198, 64),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

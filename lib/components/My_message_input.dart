@@ -29,25 +29,20 @@ class _MyWidgetState extends State<SearchSection> {
             ),
           ),
           Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                fillColor: Colors.grey.shade200,
-                filled: true,
-                alignLabelWithHint: true,
-                border: OutlineInputBorder(
-                  //Arrondir les bords
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(
-                    width: 0,
-                    style: BorderStyle.none,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.search_rounded),
+                  hintText: "entrer un message...",
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                    borderRadius: const BorderRadius.all(Radius.circular(50)),
                   ),
-                ),
-                hintText: "entrer votre message...",
-                contentPadding: const EdgeInsets.symmetric(vertical: 16),
-                hintStyle: const TextStyle(
-                  textBaseline: TextBaseline.alphabetic,
-                  fontSize: 14,
-                  color: Colors.grey,
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                    borderRadius: const BorderRadius.all(Radius.circular(50)),
+                  ),
                 ),
               ),
             ),
