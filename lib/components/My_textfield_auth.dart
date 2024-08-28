@@ -24,17 +24,19 @@ class MyTextField extends StatelessWidget {
         controller: controller,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blue),
+              borderSide: BorderSide(color: Color.fromARGB(232, 147, 149, 151)),
               borderRadius: BorderRadius.circular(30)),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: Colors.blue,
+              color: Color.fromARGB(232, 147, 149, 151),
             ),
           ),
           fillColor: Colors.white,
           filled: true,
           hintText: hintText,
-          hintStyle: TextStyle(color: Colors.blue),
+          hintStyle: TextStyle(
+            color: Color.fromARGB(232, 147, 149, 151),
+          ),
         ),
       ),
     );

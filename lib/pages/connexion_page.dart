@@ -16,7 +16,7 @@ class connexionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 140, 198, 64),
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -27,7 +27,7 @@ class connexionPage extends StatelessWidget {
             Text(
               "CONNEXION",
               style: TextStyle(
-                color: Colors.white,
+                color: Color.fromARGB(232, 147, 149, 151),
                 fontSize: 20,
               ),
             ),
@@ -57,7 +57,7 @@ class connexionPage extends StatelessWidget {
               children: [
                 Text(
                   "vous n'avez pas de compte?",
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Color.fromARGB(232, 147, 149, 151)),
                 ),
                 GestureDetector(
                   onTap: () {
@@ -65,7 +65,7 @@ class connexionPage extends StatelessWidget {
                   },
                   child: Text("        s'incrire",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: const Color.fromARGB(255, 73, 72, 72),
                         fontWeight: FontWeight.w900,
                       )),
                 )

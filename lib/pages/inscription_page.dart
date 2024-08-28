@@ -17,7 +17,7 @@ class InscriptionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 140, 198, 64),
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -28,7 +28,7 @@ class InscriptionPage extends StatelessWidget {
             Text(
               "INSCRIPTION",
               style: TextStyle(
-                color: Colors.white,
+                color: Color.fromARGB(232, 147, 149, 151),
                 fontSize: 20,
               ),
             ),
@@ -67,7 +67,7 @@ class InscriptionPage extends StatelessWidget {
               children: [
                 Text(
                   "vous a deja un compte?",
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Color.fromARGB(232, 147, 149, 151)),
                 ),
                 GestureDetector(
                     onTap: () {
@@ -75,7 +75,7 @@ class InscriptionPage extends StatelessWidget {
                     },
                     child: Text("         se connecter",
                         style: TextStyle(
-                          color: Colors.white,
+                          color: const Color.fromARGB(255, 77, 72, 72),
                           fontWeight: FontWeight.w900,
                         ))),
               ],

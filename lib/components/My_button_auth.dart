@@ -16,13 +16,16 @@ class MyButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-            color: Colors.black, borderRadius: BorderRadius.circular(30)),
+            color: Color.fromARGB(255, 140, 198, 64),
+            borderRadius: BorderRadius.circular(30)),
         padding: EdgeInsets.all(25.0),
         margin: const EdgeInsets.symmetric(horizontal: 70),
         child: Center(
           child: Text(
             "connexion",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900),
+            style: TextStyle(
+                color: const Color.fromARGB(255, 139, 132, 132),
+                fontWeight: FontWeight.w900),
           ),
         ),
       ),
