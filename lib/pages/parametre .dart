@@ -28,6 +28,15 @@ class Parametre extends StatelessWidget {
           ),
           leading: Row(
             children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/dashboard');
+                },
+                child: Icon(Icons.chevron_left),
+              ),
+              SizedBox(
+                width: 5,
+              ),
               Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
@@ -64,14 +73,6 @@ class Parametre extends StatelessWidget {
               ),
             ],
           ),
-          actions: [
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, '/dashboard');
-              },
-              child: Icon(Icons.chevron_right_outlined),
-            ),
-          ],
         ),
         body: SingleChildScrollView(
           child: Column(
