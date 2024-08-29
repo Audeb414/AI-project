@@ -1,3 +1,4 @@
+import 'package:eneo_ai_project/pages/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -15,6 +16,10 @@ class chatPage extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: ChatScreen(),
+      routes: {
+        '/dashboard': (context) => Dashboard(),
+        '/chat': (context) => chatPage(),
+      },
     );
   }
 }
