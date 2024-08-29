@@ -11,55 +11,46 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 140, 198, 64),
+        elevation: 0,
+        leading: Row(
+          children: [
+            SizedBox(width: 5),
+            const Text(
+              'IA ENEO',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, '/notification');
+            },
+            child:
+                const Icon(Icons.notifications, size: 20, color: Colors.white),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, '/parameter');
+            },
+            child: const Icon(Icons.settings, size: 20, color: Colors.white),
+          ),
+          SizedBox(width: 5),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.only(top: 20),
         child: Column(
           children: [
-            const SizedBox(height: 100),
-            Container(
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color.fromARGB(255, 102, 151, 38),
-                      Color.fromARGB(255, 91, 156, 6),
-                      Color.fromARGB(255, 102, 151, 38),
-                      Color.fromARGB(255, 91, 156, 6),
-                    ]),
-              ),
-              child: Row(
-                children: [
-                  const Text(
-                    'IA ENEO',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const Spacer(),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, '/notification');
-                    },
-                    child: const Icon(Icons.notifications,
-                        size: 20, color: Colors.white),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, '/parameter');
-                    },
-                    child: const Icon(Icons.settings,
-                        size: 20, color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
             const SizedBox(
               height: 5,
             ),
@@ -88,7 +79,7 @@ class _DashboardState extends State<Dashboard> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, '/home');
+                      Navigator.pushNamed(context, '/chat');
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -115,7 +106,7 @@ class _DashboardState extends State<Dashboard> {
                       color: Color.fromARGB(255, 140, 198, 64)),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, '/home');
+                      Navigator.pushNamed(context, '/chat');
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -143,7 +134,7 @@ class _DashboardState extends State<Dashboard> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, '/home');
+                      Navigator.pushNamed(context, '/chat');
                     },
                     child: Container(
                       decoration: BoxDecoration(

@@ -16,16 +16,16 @@ class Parametre extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Color.fromARGB(255, 140, 198, 64),
           elevation: 0,
-          flexibleSpace: Container(
+          /*flexibleSpace: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(colors: [
                 Color.fromARGB(255, 65, 123, 170),
                 Color.fromARGB(255, 53, 245, 59),
               ], transform: GradientRotation(10)),
             ),
-          ),
+          ),*/
           leading: Row(
             children: [
               GestureDetector(
