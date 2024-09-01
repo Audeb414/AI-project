@@ -11,7 +11,6 @@ class chatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Chat with AI',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

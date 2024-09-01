@@ -176,7 +176,9 @@ class _WelcomePageState extends State<WelcomePage>
                     onTapDown: _onTapDown,
                     onTapUp: _onTapUp,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/register');
+                      },
                       child: Text('Suivant'),
                       style: ElevatedButton.styleFrom(
                           foregroundColor:
