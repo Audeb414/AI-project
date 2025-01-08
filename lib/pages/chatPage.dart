@@ -1,11 +1,15 @@
+// ignore_for_file: library_private_types_in_public_api
+
+import 'dart:async';
+
 import 'package:eneo_ai_project/pages/dashboard.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 
 void main() {
   runApp(chatPage());
 }
 
+// ignore: camel_case_types, use_key_in_widget_constructors
 class chatPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -16,6 +20,7 @@ class chatPage extends StatelessWidget {
       ),
       home: ChatScreen(),
       routes: {
+        // ignore: prefer_const_constructors
         '/dashboard': (context) => Dashboard(),
         '/chat': (context) => chatPage(),
       },
@@ -23,6 +28,7 @@ class chatPage extends StatelessWidget {
   }
 }
 
+// ignore: use_key_in_widget_constructors
 class ChatScreen extends StatefulWidget {
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -33,6 +39,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
   final StreamController<List<Message>> _streamController = StreamController();
 
+  // ignore: unused_element
   void _sendMessage() {
     if (_controller.text.isNotEmpty) {
       String userMessage = _controller.text;
@@ -65,6 +72,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: prefer_typing_uninitialized_variables
+    var sendMessage;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 27, 118, 187),
@@ -119,6 +128,7 @@ class _ChatScreenState extends State<ChatScreen> {
           Expanded(
             child: StreamBuilder<List<Message>>(
               stream: _streamController.stream,
+              // ignore: prefer_const_literals_to_create_immutables
               initialData: [],
               builder: (context, snapshot) {
                 return ListView.builder(
@@ -142,15 +152,15 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: const Icon(
                     Icons.add,
                     color: Colors.white,
-                    size: 25,
+                    size: 35,
                   ),
                 ),
-                const SizedBox(width: 5),
+                const SizedBox(width: 20),
                 Expanded(
                   child: TextField(
                     controller: _controller,
                     decoration: InputDecoration(
-                      hintText: "entrer un message...",
+                      hintText: "      entrer un message...",
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.grey.shade300),
                         borderRadius:
@@ -164,17 +174,45 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 5),
+                const SizedBox(width: 20),
                 Container(
-                  height: 30,
-                  width: 28,
+                  // ignore: prefer_const_constructors
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: const Color.fromARGB(255, 140, 198, 64),
                   ),
                   child: IconButton(
-                    icon: const Icon(Icons.send, color: Colors.white, size: 18),
-                    onPressed: _sendMessage,
+                    // ignore: prefer_const_constructors
+                    icon: Icon(
+                      Icons.mic,
+                      color: Colors.white,
+                      size: 23,
+                    ),
+                    onPressed: () {
+                      //logique pour enregistrer un sms vocal
+                      // ignore: avoid_print
+                      print(
+                          "Enregistrement vocal"); // Remplacer par votre logique
+                    },
+                  ),
+                ),
+                // ignore: prefer_const_constructors
+                SizedBox(width: 20),
+                Container(
+                  // ignore: prefer_const_constructors
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: const Color.fromARGB(255, 140, 198, 64),
+                  ),
+                  child: IconButton(
+                    // ignore: prefer_const_constructors
+                    icon: Icon(
+                      Icons.send,
+                      color: Colors.white,
+                      size: 23,
+                    ),
+
+                    onPressed: sendMessage,
                   ),
                 ),
               ],

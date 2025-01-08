@@ -12,10 +12,14 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // ignore: prefer_const_constructors
         backgroundColor: Color.fromARGB(255, 140, 198, 64),
         elevation: 0,
+        // ignore: prefer_const_constructors
         leading: Row(
+          // ignore: prefer_const_literals_to_create_immutables
           children: [
+            // ignore: prefer_const_constructors
             SizedBox(width: 5),
             const Text(
               'IA ENEO',
@@ -44,6 +48,7 @@ class _DashboardState extends State<Dashboard> {
             },
             child: const Icon(Icons.settings, size: 20, color: Colors.white),
           ),
+          // ignore: prefer_const_constructors
           SizedBox(width: 5),
         ],
       ),
@@ -135,12 +140,13 @@ class _DashboardState extends State<Dashboard> {
                   GestureDetector(
                     onTap: () {
                       Navigator.pushNamed(context, '/chat');
+                      Navigator.pushNamed(context, '/parametre');
+                      Navigator.pushNamed(context, '/notification_page');
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.grey.shade200,
-                      ),
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.grey),
                       padding: const EdgeInsets.all(16),
                       child: const Align(
                         alignment: Alignment.centerLeft,
