@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_key_in_widget_constructors
 
+import 'package:eneo_ai_project/pages/dashboard.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,6 +15,9 @@ class Parametre extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      routes: {
+        '/dashboard': (context) => Dashboard()
+      },
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: Color.fromARGB(255, 140, 198, 64),

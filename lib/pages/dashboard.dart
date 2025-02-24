@@ -1,3 +1,6 @@
+import 'package:eneo_ai_project/pages/chatPage.dart';
+import 'package:eneo_ai_project/pages/notification_page.dart';
+import 'package:eneo_ai_project/pages/parametre%20.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatefulWidget {
@@ -10,14 +13,21 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      routes: {
+        '/notification': (context) => notification(),
+        '/parameter': (context) => Parametre(),
+        '/chat': (context) => chatPage(),
+      },
+      home: Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 140, 198, 64),
+        backgroundColor: const Color.fromARGB(255, 140, 198, 64),
         elevation: 0,
-        leading: Row(
+        leading: const Row(
           children: [
             SizedBox(width: 5),
-            const Text(
+            Text(
               'IA ENEO',
               style: TextStyle(
                 fontSize: 14,
@@ -44,7 +54,7 @@ class _DashboardState extends State<Dashboard> {
             },
             child: const Icon(Icons.settings, size: 20, color: Colors.white),
           ),
-          SizedBox(width: 5),
+          const SizedBox(width: 5),
         ],
       ),
       body: Padding(
@@ -166,6 +176,6 @@ class _DashboardState extends State<Dashboard> {
           ],
         ),
       ),
-    );
+    ),);
   }
 }

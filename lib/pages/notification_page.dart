@@ -1,5 +1,6 @@
 // ignore_for_file: camel_case_types, prefer_const_constructors, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, unused_import
 
+import 'package:eneo_ai_project/pages/dashboard.dart';
 import 'package:flutter/material.dart';
 
 class notification extends StatefulWidget {
@@ -50,7 +51,12 @@ class _notificationState extends State<notification> {
   ];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      routes: {
+        '/dashboard': (context) => Dashboard()
+      },
+      home:Scaffold(
       body: Padding(
         padding: EdgeInsets.only(top: 10),
         child: Column(
@@ -148,6 +154,6 @@ class _notificationState extends State<notification> {
           ],
         ),
       ),
-    );
+    ),);
   }
 }
