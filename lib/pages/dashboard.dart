@@ -22,10 +22,20 @@ class _DashboardState extends State<Dashboard> {
       },
       home: Scaffold(
       appBar: AppBar(
+<<<<<<< HEAD
         backgroundColor: const Color.fromARGB(255, 140, 198, 64),
         elevation: 0,
         leading: const Row(
+=======
+        // ignore: prefer_const_constructors
+        backgroundColor: Color.fromARGB(255, 140, 198, 64),
+        elevation: 0,
+        // ignore: prefer_const_constructors
+        leading: Row(
+          // ignore: prefer_const_literals_to_create_immutables
+>>>>>>> 33af90d10f43c7bac3cbaa32985d4d697b44fcb2
           children: [
+            // ignore: prefer_const_constructors
             SizedBox(width: 5),
             Text(
               'IA ENEO',
@@ -54,7 +64,12 @@ class _DashboardState extends State<Dashboard> {
             },
             child: const Icon(Icons.settings, size: 20, color: Colors.white),
           ),
+<<<<<<< HEAD
           const SizedBox(width: 5),
+=======
+          // ignore: prefer_const_constructors
+          SizedBox(width: 5),
+>>>>>>> 33af90d10f43c7bac3cbaa32985d4d697b44fcb2
         ],
       ),
       body: Padding(
@@ -145,12 +160,13 @@ class _DashboardState extends State<Dashboard> {
                   GestureDetector(
                     onTap: () {
                       Navigator.pushNamed(context, '/chat');
+                      Navigator.pushNamed(context, '/parametre');
+                      Navigator.pushNamed(context, '/notification_page');
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.grey.shade200,
-                      ),
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.grey),
                       padding: const EdgeInsets.all(16),
                       child: const Align(
                         alignment: Alignment.centerLeft,

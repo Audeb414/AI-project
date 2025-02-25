@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -67,6 +67,7 @@ class _LoadingScreenState extends State<LoadingScreen>
                         blurRadius: 15),
                     BoxShadow(
                         color:
+                            // ignore: deprecated_member_use
                             const Color.fromARGB(255, 0, 0, 0).withOpacity(0.5),
                         offset: Offset(-2, -2),
                         blurRadius: 15),
