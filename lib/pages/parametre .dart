@@ -3,21 +3,20 @@
 import 'package:eneo_ai_project/pages/dashboard.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const Parametre());
-}
-
-class Parametre extends StatelessWidget {
+class Parametre extends StatefulWidget {
   const Parametre({super.key});
 
+  @override
+  State<Parametre> createState() => _ParametreState();
+}
+
+class _ParametreState extends State<Parametre> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      routes: {
-        '/dashboard': (context) => Dashboard()
-      },
+      routes: {'/dashboard': (context) => Dashboard()},
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: Color.fromARGB(255, 140, 198, 64),

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:eneo_ai_project/pages/inscription_page.dart';
-// Importation de DatabaseHelper
-
+import 'package:firebase_auth/firebase_auth.dart';
 import '../components/My_button_auth.dart';
 import '../components/My_textfield_auth.dart';
 
@@ -11,28 +9,31 @@ class connexionPage extends StatelessWidget {
 
   connexionPage({super.key});
 
-  void connexion(BuildContext context) async {
+  Future<void> connexion(BuildContext context) async {
     String email = _emailController.text.trim();
     String password = _passwordController.text.trim();
 
     if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Veuillez remplir tous les champs.")),
+        const SnackBar(content: Text("Veuillez remplir tous les champs.")),
       );
       return;
     }
 
-    bool isAuthenticated =
-        await DatabaseHelper.instance.loginUser(email, password);
+    try {
+      // 🔥 Authentification avec Firebase
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-    if (isAuthenticated) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Connexion réussie !")),
+        const SnackBar(content: Text("Connexion réussie !")),
       );
       Navigator.pushNamed(context, '/dashboard');
-    } else {
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Email ou mot de passe incorrect.")),
+        SnackBar(content: Text("Erreur de connexion : ${e.toString()}")),
       );
     }
   }
@@ -48,7 +49,7 @@ class connexionPage extends StatelessWidget {
             const SizedBox(height: 50),
 
             // Titre
-            Text(
+            const Text(
               "CONNEXION",
               style: TextStyle(
                 color: Color.fromARGB(232, 147, 149, 151),
@@ -79,7 +80,7 @@ class connexionPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   "Vous n'avez pas de compte ?",
                   style: TextStyle(color: Color.fromARGB(232, 147, 149, 151)),
                 ),
@@ -87,7 +88,7 @@ class connexionPage extends StatelessWidget {
                   onTap: () {
                     Navigator.pushNamed(context, '/register');
                   },
-                  child: Text(
+                  child: const Text(
                     " S'inscrire",
                     style: TextStyle(
                       color: Color.fromARGB(255, 73, 72, 72),

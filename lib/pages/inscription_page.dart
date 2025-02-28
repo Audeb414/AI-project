@@ -1,101 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../components/My_button_auth.dart';
 import '../components/My_textfield_auth.dart';
 
 class DatabaseHelper {
-  static Database? _database;
-  static final DatabaseHelper instance = DatabaseHelper._init();
+  static final FirebaseFirestore _db = FirebaseFirestore.instance;
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  DatabaseHelper._init();
-
-  Future<Database> get database async {
-    if (_database != null) return _database!;
-    _database = await _initDB();
-    return _database!;
-  }
-
-  Future<Database> _initDB() async {
-    sqfliteFfiInit();
-    databaseFactory = databaseFactoryFfi;
-
-    // Stocker la base sur le Bureau
-    String path = "/home/aude/Bureau/ma_base.db";
-    print("📂 Chemin de la base de données : $path");
-
-    return await databaseFactory.openDatabase(
-      path,
-      options: OpenDatabaseOptions(
-        version: 1,
-        onCreate: (db, version) async {
-          print("📌 Création de la table 'users'...");
-          await _createTables(db);
-        },
-        onConfigure: (db) async {
-          await db.execute("PRAGMA foreign_keys = ON;");
-        },
-        onOpen: (db) async {
-          print("✅ Base de données ouverte.");
-
-          // Vérification des tables existantes
-          var tables = await db
-              .rawQuery("SELECT name FROM sqlite_master WHERE type='table'");
-          print("📋 Tables existantes après ouverture : $tables");
-
-          // Création de la table si elle n'existe pas encore
-          if (!tables.any((table) => table['name'] == 'users')) {
-            print("⚠️ La table 'users' n'existe pas, création en cours...");
-            await _createTables(db);
-          }
-        },
-      ),
-    );
-  }
-
-  Future<void> _createTables(Database db) async {
-    await db.execute('''
-      CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        password TEXT NOT NULL,
-        email TEXT NOT NULL UNIQUE,
-        phone TEXT NOT NULL
-      )
-    ''');
-    print("✅ Table 'users' créée ou déjà existante.");
-  }
-
-  Future<int> insertUser(
-      String name, String password, String email, String phone) async {
-    final db = await database;
-
+  // 🔹 Inscription avec Firebase Authentication et ajout dans Firestore
+  Future<void> inscrireUtilisateur(
+      String name, String email, String password, String phone) async {
     try {
-      int id = await db.insert('users',
-          {'name': name, 'password': password, 'email': email, 'phone': phone});
-      print("👤 Utilisateur ajouté avec ID : $id");
-      return id;
+      // 1️⃣ Création de l'utilisateur dans Firebase Authentication
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      String uid = userCredential.user!.uid; // Récupération du UID FirebaseAuth
+
+      // 2️⃣ Stocker les infos de l'utilisateur dans Firestore
+      await _db.collection("users").doc(uid).set({
+        'name': name,
+        'email': email,
+        'phone': phone,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+      print("✅ Utilisateur inscrit avec succès : UID = $uid");
     } catch (e) {
-      print("❌ Erreur lors de l'insertion : $e");
-      throw Exception("Erreur lors de l'insertion de l'utilisateur.");
+      print("❌ Erreur lors de l'inscription : $e");
+      throw Exception("Erreur lors de l'inscription.");
     }
   }
 
-  Future<List<Map<String, dynamic>>> getUsers() async {
-    final db = await database;
-    return await db.query('users');
-  }
-
-  // ✅ Ajout de la fonction pour vérifier l'email et le mot de passe
+  // 🔹 Connexion utilisateur (FirebaseAuth)
   Future<bool> loginUser(String email, String password) async {
-    final db = await database;
-    List<Map<String, dynamic>> result = await db.query(
-      'users',
-      where: 'email = ? AND password = ?',
-      whereArgs: [email, password],
-    );
-
-    return result.isNotEmpty; // Retourne vrai si l'utilisateur existe
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      print("✅ Connexion réussie : ${_auth.currentUser?.email}");
+      return true;
+    } catch (e) {
+      print("❌ Erreur de connexion : $e");
+      return false;
+    }
   }
 }
 
@@ -120,28 +70,24 @@ class InscriptionPage extends StatelessWidget {
 
     if (name.isEmpty || password.isEmpty || email.isEmpty || phone.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Veuillez remplir tous les champs.")),
+        const SnackBar(content: Text("Veuillez remplir tous les champs.")),
       );
       return;
     }
 
     if (!isValidEmail(email)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Veuillez entrer un email valide.")),
+        const SnackBar(content: Text("Veuillez entrer un email valide.")),
       );
       return;
     }
 
     try {
-      await DatabaseHelper.instance.insertUser(name, password, email, phone);
+      await DatabaseHelper().inscrireUtilisateur(name, email, password, phone);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Inscription réussie!")),
+        const SnackBar(content: Text("Inscription réussie!")),
       );
       Navigator.pushNamed(context, '/dashboard');
-
-      List<Map<String, dynamic>> users =
-          await DatabaseHelper.instance.getUsers();
-      print("✅ Utilisateurs enregistrés : $users");
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -160,7 +106,7 @@ class InscriptionPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 50),
-              Text(
+              const Text(
                 "INSCRIPTION",
                 style: TextStyle(
                   color: Color.fromARGB(232, 147, 149, 151),
@@ -195,7 +141,7 @@ class InscriptionPage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     "Vous avez déjà un compte?",
                     style: TextStyle(color: Color.fromARGB(232, 147, 149, 151)),
                   ),
@@ -203,7 +149,7 @@ class InscriptionPage extends StatelessWidget {
                     onTap: () {
                       Navigator.pushNamed(context, '/login');
                     },
-                    child: Text(
+                    child: const Text(
                       " Se connecter",
                       style: TextStyle(
                         color: Color.fromARGB(255, 77, 72, 72),

@@ -1,5 +1,5 @@
 // ignore_for_file: prefer_const_constructors, unused_import
-
+import 'dart:io';
 import 'package:eneo_ai_project/pages/chatPage.dart';
 import 'package:eneo_ai_project/pages/connexion_page.dart';
 import 'package:eneo_ai_project/pages/dashboard.dart';
@@ -7,10 +7,21 @@ import 'package:eneo_ai_project/pages/notification_page.dart';
 import 'package:eneo_ai_project/pages/parametre%20.dart';
 import 'package:eneo_ai_project/pages/welcome_page.dart';
 import 'package:flutter/material.dart';
-
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'pages/inscription_page.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding
+      .ensureInitialized(); // Nécessaire pour exécuter du code asynchrone dans `main`
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions
+        .currentPlatform, // Assure-toi que ce fichier existe
+  );
+
   runApp(const MyApp());
 }
 

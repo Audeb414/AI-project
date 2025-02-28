@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "538675078690",
+    "project_id": "eneo-chat",
+    "storage_bucket": "eneo-chat.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:538675078690:android:1dfab1abf369a19b794c7b",
+        "android_client_info": {
+          "package_name": "com.example.eneo_ai_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzc2wRu1eoCuojd51SGOnAOtKZZHQ13kQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
