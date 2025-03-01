@@ -15,168 +15,114 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      home: DashboardPage(),
+    );
+  }
+}
+
+class DashboardPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
       routes: {
         '/notification': (context) => notification(),
         '/parameter': (context) => Parametre(),
         '/chat': (context) => chatPage(),
       },
       home: Scaffold(
+        backgroundColor: Colors.grey[200],
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 140, 198, 64),
+          backgroundColor: Color.fromARGB(255, 140, 198, 64),
           elevation: 0,
-          leading: const Row(
-            children: [
-              // ignore: prefer_const_constructors
-              SizedBox(width: 5),
-              Text(
-                'IA ENEO',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ],
+          leading: IconButton(
+            icon: Icon(Icons.notifications, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => notification()),
+              );
+            },
           ),
           actions: [
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, '/notification');
+            IconButton(
+              icon: Icon(Icons.settings, color: Colors.white),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Parametre()),
+                );
               },
-              child: const Icon(Icons.notifications,
-                  size: 20, color: Colors.white),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, '/parameter');
-              },
-              child: const Icon(Icons.settings, size: 20, color: Colors.white),
             ),
             const SizedBox(width: 5),
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.only(top: 20),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 5,
+        body: Column(
+          mainAxisAlignment:
+              MainAxisAlignment.spaceBetween, // Espacement entre les éléments
+          children: [
+            // Partie supérieure avec le logo
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    radius: 60,
+                    backgroundColor: Color.fromARGB(255, 27, 118, 187),
+                    child: CircleAvatar(
+                      radius: 55,
+                      backgroundImage: AssetImage('assets/images/logo.webp'),
+                    ),
+                  ),
+                  SizedBox(height: 20), // Espacement entre le logo et le texte
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20), // Marge latérale
+                    child: Text(
+                      "Bienvenue sur le Chatbot ENEO Cameroun ! ⚡\n\n"
+                      "ENEO Cameroun est le principal fournisseur d'électricité au Cameroun, engagé à offrir une énergie fiable et accessible pour accompagner le développement du pays. Avec une vision axée sur l'innovation et la satisfaction des clients, ENEO œuvre chaque jour pour améliorer la qualité de ses services.\n\n"
+                      "Que vous soyez à la recherche d'un emploi, d'un stage ou simplement d'informations sur l'entreprise, ce chatbot est là pour vous guider ! Sélectionnez une option et laissez-vous accompagner. 🔍⚡",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.search_rounded),
-                    hintText: "rechercher une application...",
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey.shade300),
-                      borderRadius: const BorderRadius.all(Radius.circular(50)),
+            ),
+
+            // Bouton en bas centré
+            Padding(
+              padding: EdgeInsets.only(bottom: 40), // Marge en bas
+              child: Align(
+                alignment: Alignment.center,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => chatPage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 140, 198, 64),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      side: BorderSide(color: Colors.white, width: 2),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey.shade300),
-                      borderRadius: const BorderRadius.all(Radius.circular(50)),
-                    ),
+                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 40),
+                  ),
+                  child: Text(
+                    "Accéder au Chatbot",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              Expanded(
-                child: Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/chat');
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.grey.shade200,
-                        ),
-                        padding: const EdgeInsets.all(16),
-                        child: const Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Emex',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: Colors.grey),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const Divider(
-                        indent: 70,
-                        endIndent: 70,
-                        thickness: 1.5,
-                        color: Color.fromARGB(255, 140, 198, 64)),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/chat');
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.grey.shade200,
-                        ),
-                        padding: const EdgeInsets.all(16),
-                        child: const Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Jobsite',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: Colors.grey),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const Divider(
-                      indent: 70,
-                      endIndent: 70,
-                      thickness: 1.5,
-                      color: Color.fromARGB(255, 140, 198, 64),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/chat');
-                        Navigator.pushNamed(context, '/parametre');
-                        Navigator.pushNamed(context, '/notification_page');
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.grey),
-                        padding: const EdgeInsets.all(16),
-                        child: const Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Stage internship',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: Colors.grey),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const Divider(
-                      indent: 70,
-                      endIndent: 70,
-                      thickness: 1.5,
-                      color: Color.fromARGB(255, 140, 198, 64),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

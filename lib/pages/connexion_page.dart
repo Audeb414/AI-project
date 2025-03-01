@@ -31,9 +31,18 @@ class connexionPage extends StatelessWidget {
         const SnackBar(content: Text("Connexion réussie !")),
       );
       Navigator.pushNamed(context, '/dashboard');
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+      if (e.code == 'user-not-found') {
+        errorMessage = "Aucun utilisateur trouvé avec cet e-mail.";
+      } else if (e.code == 'wrong-password') {
+        errorMessage = "Mot de passe incorrect.";
+      } else {
+        errorMessage =
+            "Une erreur s'est produite lors de la connexion. Veuillez réessayer.";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Erreur de connexion : ${e.toString()}")),
+        SnackBar(content: Text(errorMessage)),
       );
     }
   }

@@ -31,11 +31,14 @@ class _ParametreState extends State<Parametre> {
           ),*/
           leading: Row(
             children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, '/dashboard');
+              IconButton(
+                icon: Icon(Icons.chevron_left, color: Colors.black),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Dashboard()),
+                  );
                 },
-                child: Icon(Icons.chevron_left),
               ),
               SizedBox(
                 width: 5,
