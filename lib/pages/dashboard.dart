@@ -2,6 +2,7 @@ import 'package:eneo_ai_project/pages/chatPage.dart';
 import 'package:eneo_ai_project/pages/notification_page.dart';
 import 'package:eneo_ai_project/pages/parametre%20.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -100,11 +101,15 @@ class DashboardPage extends StatelessWidget {
               child: Align(
                 alignment: Alignment.center,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => chatPage()),
-                    );
+                  onPressed: () async {
+                    final Uri url = Uri.parse(
+                        "https://cdn.botpress.cloud/webchat/v2.3/shareable.html?configUrl=https://files.bpcontent.cloud/2024/10/29/00/20241029004814-CIXSAA6L.json");
+                    if (await canLaunchUrl(url)) {
+                      await launchUrl(url,
+                          mode: LaunchMode.externalApplication);
+                    } else {
+                      throw 'Impossible d\'ouvrir le chatbot';
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(255, 140, 198, 64),
