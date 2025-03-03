@@ -1,3 +1,4 @@
+import 'dart:convert'; // Pour utiliser Encoding
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -7,26 +8,32 @@ class chatPage extends StatefulWidget {
 }
 
 class _chatPageState extends State<chatPage> {
-  late final WebViewController controller;
+  late WebViewController _controller;
 
   @override
   void initState() {
     super.initState();
-    /*if (WebViewPlatform.instance == null) {
-      WebViewPlatform.instance ??= SurfaceAndroidWebview();
-    }*/
+    // Assurer que WebView est bien initialisé
+    WidgetsFlutterBinding.ensureInitialized();
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted);
 
-    controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..loadRequest(Uri.parse(
-          "https://cdn.botpress.cloud/webchat/v2.3/shareable.html?configUrl=https://files.bpcontent.cloud/2024/10/29/00/20241029004814-CIXSAA6L.json")); // Remplace TON_BOT_ID
+    // Charger l'iframe avec la page HTML
+    _controller.loadRequest(
+      Uri.dataFromString('''<html>
+            <body>
+                <iframe src="https://eneo-chat.web.app" width="100%" height="600px" frameborder="0"></iframe>
+            </body>
+        </html>''',
+          mimeType: 'text/html', encoding: Encoding.getByName('utf-8')),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Chatbot")),
-      body: WebViewWidget(controller: controller),
+      body: WebViewWidget(controller: _controller),
     );
   }
 }
