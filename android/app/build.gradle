@@ -28,8 +28,11 @@ if (flutterVersionName == null) {
 
 android {
     namespace = "com.example.eneo_ai_project"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    compileSdkVersion 34
+    //compileSdk = flutter.compileSdkVersion
+    ndkVersion "23.1.7779620"
+
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -42,7 +45,8 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdk = minSdkVersion 20
-        targetSdk = flutter.targetSdkVersion
+        targetSdkVersion 31
+        //targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
     }
