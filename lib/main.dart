@@ -7,7 +7,6 @@ import 'package:eneo_ai_project/pages/notification_page.dart';
 import 'package:eneo_ai_project/pages/parametre%20.dart';
 import 'package:eneo_ai_project/pages/welcome_page.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'pages/inscription_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 

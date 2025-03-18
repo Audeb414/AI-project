@@ -30,7 +30,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  sqflite: ^2.4.1
   path_provider: ^2.1.2
   ffi: ^2.1.3
   flutter_sound: ^9.0.0 
@@ -42,7 +41,6 @@ dependencies:
   cupertino_icons: ^1.0.6
   rive: ^0.13.12
   flutter_svg: ^2.0.9
-  sqflite_common_ffi: ^2.3.4+4
   firebase_auth: ^5.5.1
   cloud_firestore: ^5.6.5
   firebase_core: ^3.12.1
@@ -50,6 +48,9 @@ dependencies:
   webview_flutter_android: ^4.3.2
   webview_flutter_wkwebview: ^3.18.3
   url_launcher: ^6.3.1
+  firebase_storage: ^12.4.4
+  file_picker: ^9.0.2
+  http: ^1.3.0
 
 dev_dependencies:
   flutter_test:
