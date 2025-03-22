@@ -1,50 +1,85 @@
-import 'dart:async';
+import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:eneo_ai_project/pages/dashboard.dart';
-import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart'; // Importation du package url_launcher
+import 'package:file_picker/file_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloudinary_public/cloudinary_public.dart';
 
-class chatPage extends StatelessWidget {
+class chatPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: ChatScreen(),
-      routes: {
-        '/dashboard': (context) => Dashboard(),
-        '/chat': (context) => chatPage(),
-      },
-    );
-  }
+  _chatPageState createState() => _chatPageState();
 }
 
-class ChatScreen extends StatefulWidget {
-  @override
-  _ChatScreenState createState() => _ChatScreenState();
-}
-
-class _ChatScreenState extends State<ChatScreen> {
+class _chatPageState extends State<chatPage> {
   final List<Message> _messages = [];
   final TextEditingController _controller = TextEditingController();
-  final StreamController<List<Message>> _streamController = StreamController();
   bool _isLoading = false;
   String? _error;
 
   final String apiKey =
-      "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";
+      "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";
   final String apiUrl = "https://openrouter.ai/api/v1/chat/completions";
+  final String systemMessage =
+      "Tu es un assistant virtuel d'ENEO Cameroun. Réponds aux questions des utilisateurs en te basant sur le site officiel.";
 
-  // Message d'introduction au début pour ne pas répondre directement
-  String systemMessage =
-      "Tu es un assistant virtuel d'ENEO Cameroun. Comment puis-je t'aider aujourd'hui ? Pose ta question et je ferai de mon mieux pour y répondre.";
+  final CloudinaryPublic cloudinary =
+      CloudinaryPublic('dbjqlkk4r', 'documents');
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('IA ENEO')),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: _messages.length,
+              itemBuilder: (context, index) {
+                return _buildMessageBubble(_messages[index]);
+              },
+            ),
+          ),
+          if (_error != null)
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(_error!, style: TextStyle(color: Colors.red)),
+            ),
+          ElevatedButton(
+            onPressed: () async {
+              await _showApplicationDialog();
+            },
+            child: Text("Postuler"),
+          ),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : TextField(
+                    controller: _controller,
+                    onSubmitted: (_) => _sendMessage(),
+                    decoration: InputDecoration(
+                      hintText: "Posez votre question...",
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.send),
+                        onPressed: _sendMessage,
+                      ),
+                    ),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Future<void> _sendMessage() async {
     if (_controller.text.isEmpty) return;
-
     setState(() {
       _isLoading = true;
       _error = null;
@@ -52,10 +87,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
     String userMessage = _controller.text;
     _controller.clear();
-
     setState(() {
       _messages.add(Message(text: userMessage, isUser: true));
-      _streamController.add(_messages);
     });
 
     try {
@@ -68,10 +101,7 @@ class _ChatScreenState extends State<ChatScreen> {
         body: jsonEncode({
           "model": "mistralai/mistral-7b-instruct",
           "messages": [
-            {
-              "role": "system",
-              "content": systemMessage,
-            },
+            {"role": "system", "content": systemMessage},
             {"role": "user", "content": userMessage}
           ]
         }),
@@ -81,26 +111,9 @@ class _ChatScreenState extends State<ChatScreen> {
         var jsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
         String botResponse = jsonResponse["choices"][0]["message"]["content"];
 
-        // Logique pour vérifier si la réponse contient un lien
-        bool containsLink = botResponse.contains("https");
-
         setState(() {
           _messages.add(Message(text: botResponse, isUser: false));
-          _streamController.add(_messages);
         });
-
-        // Si l'IA n'a pas donné de réponse utile, proposer un lien
-        if (!containsLink) {
-          setState(() {
-            _messages.add(
-              Message(
-                text:
-                    "Pour plus d'informations, tu peux consulter le site officiel d'ENEO : https://eneocameroon.cm",
-                isUser: false,
-              ),
-            );
-          });
-        }
       } else {
         setState(() {
           _error = "Erreur ${response.statusCode}: ${response.body}";
@@ -117,113 +130,178 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  @override
-  void dispose() {
-    _streamController.close();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 27, 118, 187),
-        elevation: 0,
-        title: Text('IA ENEO'),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: StreamBuilder<List<Message>>(
-              stream: _streamController.stream,
-              initialData: [],
-              builder: (context, snapshot) {
-                return ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    return _buildMessageBubble(snapshot.data![index]);
-                  },
-                );
-              },
-            ),
-          ),
-          if (_error != null)
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                _error!,
-                style: TextStyle(color: Colors.red),
-              ),
-            ),
-          Padding(
+  Widget _buildMessageBubble(Message message) {
+    return Align(
+      alignment: message.isUser ? Alignment.centerRight : Alignment.centerLeft,
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Material(
+          color: message.isUser ? Colors.blue[100]! : Colors.grey[300]!,
+          borderRadius: BorderRadius.circular(8.0),
+          child: Padding(
             padding: EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    decoration: InputDecoration(
-                      hintText: "Entrer un message...",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: _isLoading
-                      ? CircularProgressIndicator()
-                      : Icon(Icons.send, color: Colors.blue),
-                  onPressed: _isLoading ? null : _sendMessage,
-                ),
-              ],
-            ),
+            child: Text(message.text),
           ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _buildMessageBubble(Message message) {
-    return Align(
-      alignment: message.isUser ? Alignment.topRight : Alignment.topLeft,
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: message.isUser ? Colors.blue[200] : Colors.grey[300],
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              message.text,
-              style: TextStyle(
-                  color: message.isUser ? Colors.white : Colors.black),
+  Future<void> _showApplicationDialog() async {
+    String? stageType;
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Étapes du processus de candidature"),
+          content: Text(
+            "1. Sélectionner le type de stage.\n"
+            "2. Fournir les documents nécessaires (CV, dernier diplôme, etc.).\n"
+            "3. Soumettre votre candidature.\n\n"
+            "Cliquez sur le bouton 'OK' pour continuer.",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
             ),
-            if (!message.isUser && message.text.contains("https"))
-              GestureDetector(
-                onTap: () async {
-                  final url =
-                      message.text.contains("https") ? message.text : '';
-                  if (await canLaunch(url)) {
-                    await launch(url); // Ouvre l'URL dans le navigateur
-                  } else {
-                    setState(() {
-                      _error = "Impossible d'ouvrir le lien.";
-                    });
-                  }
-                },
-                child: Text(
-                  "Ouvrir le site officiel",
-                  style: TextStyle(
-                      color: Colors.blue, decoration: TextDecoration.underline),
-                ),
-              ),
           ],
-        ),
-      ),
+        );
+      },
+    );
+
+    stageType = await _askUserStageType();
+    if (stageType != null) {
+      await _askUserForDocuments(stageType);
+    }
+  }
+
+  Future<String?> _askUserStageType() async {
+    return await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Quel type de stage souhaitez-vous ?"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text("Stage académique"),
+                onTap: () => Navigator.pop(context, "Stage académique"),
+              ),
+              ListTile(
+                title: Text("Stage de recherche"),
+                onTap: () => Navigator.pop(context, "Stage de recherche"),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _askUserForDocuments(String stageType) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    String userId = user?.uid ?? "inconnu";
+
+    // Demande le CV
+    String? cvPath = await _pickFile("Veuillez télécharger votre CV (PDF)");
+    if (cvPath == null) return;
+
+    String? cvUrl = await _uploadToCloudinary(cvPath);
+    if (cvUrl == null) return;
+
+    // Demande le dernier diplôme
+    String? diplomaPath =
+        await _pickFile("Veuillez télécharger votre dernier diplôme (PDF)");
+    if (diplomaPath == null) return;
+
+    String? diplomaUrl = await _uploadToCloudinary(diplomaPath);
+    if (diplomaUrl == null) return;
+
+    // Soumet la candidature
+    await _submitApplication(userId, stageType, cvUrl, diplomaUrl);
+  }
+
+  Future<String?> _pickFile(String message) async {
+    // Affiche un dialogue pour demander à l'utilisateur de choisir un fichier
+    return await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(message),
+          content: Text(
+              "Appuyez sur le bouton ci-dessous pour sélectionner un fichier PDF."),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                FilePickerResult? result = await FilePicker.platform.pickFiles(
+                  type: FileType.custom,
+                  allowedExtensions: ['pdf'],
+                );
+                if (result != null && result.files.isNotEmpty) {
+                  Navigator.pop(context, result.files.single.path);
+                } else {
+                  Navigator.pop(context,
+                      null); // Retourne null si aucun fichier n'est sélectionné
+                }
+              },
+              child: Text("Choisir un PDF"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<String?> _uploadToCloudinary(String filePath) async {
+    try {
+      CloudinaryResponse response = await cloudinary.uploadFile(
+        CloudinaryFile.fromFile(filePath,
+            resourceType: CloudinaryResourceType.Raw),
+      );
+      return response.secureUrl;
+    } catch (e) {
+      setState(() {
+        _error = "Erreur lors du téléversement : $e";
+      });
+      return null;
+    }
+  }
+
+  Future<void> _submitApplication(
+      String userId, String stageType, String cvUrl, String diplomaUrl) async {
+    String collectionName =
+        stageType == "Stage académique" ? "acStage" : "rechStage";
+
+    await FirebaseFirestore.instance.collection(collectionName).add({
+      "userId": userId,
+      "stageType": stageType,
+      "cvUrl": cvUrl,
+      "diplomaUrl": diplomaUrl,
+      "timestamp": FieldValue.serverTimestamp(),
+    });
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Candidature soumise"),
+          content: Text(
+              "✅ Votre candidature a été soumise avec succès ! Un recruteur vous contactera si votre dossier est retenu."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -231,10 +309,10 @@ class _ChatScreenState extends State<ChatScreen> {
 class Message {
   final String text;
   final bool isUser;
-
   Message({required this.text, required this.isUser});
 }
 
-//bp_pat_XBjyeyOY5ELucoKS2lIaBYPvuW1kRUPmISGs
-//https://webhook.botpress.cloud/381db053-0999-4c68-8d4f-a51f5f029c8d
-//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
+//cloud name: dbjqlkk4r
+//API key: 184846136368251
+//API secret: jT13LPzypdJVp10EoVkO307GidA
+//API env variable: CLOUDINARY_URL=cloudinary://184846136368251:jT13LPzypdJVp10EoVkO307GidA@dbjqlkk4r
