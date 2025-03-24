@@ -42,11 +42,24 @@ class _chatPageState extends State<chatPage> {
             ),
           ),
           if (_error != null) _buildErrorMessage(_error!),
-          ElevatedButton(
-            onPressed: () async {
-              await _showApplicationDialog();
-            },
-            child: Text("Postuler"),
+          Row(
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  await _showJobApplicationDialog();
+                },
+                child: Text("Postuler pour un emploi"),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  await _showApplicationDialog();
+                },
+                child: Text("Postuler pour un stage"),
+              ),
+            ],
           ),
           Padding(
             padding: EdgeInsets.all(8.0),
@@ -150,6 +163,125 @@ class _chatPageState extends State<chatPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _showJobApplicationDialog() async {
+    String? jobPosition;
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Étapes du processus de candidature pour un emploi"),
+          content: Text(
+            "1. Sélectionner le poste souhaité.\n"
+            "2. Fournir les documents nécessaires (CV, lettre de motivation, dernier diplôme).\n"
+            "3. Soumettre votre candidature.\n\n"
+            "Cliquez sur le bouton 'OK' pour continuer.",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+    jobPosition = await _askUserJobPosition();
+    if (jobPosition != null) {
+      await _askUserForJobDocuments(jobPosition);
+    }
+  }
+
+  Future<String?> _askUserJobPosition() async {
+    return await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Quel poste souhaitez-vous ?"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Ajoute ici une liste de postes disponibles ou une méthode pour les obtenir
+              ListTile(
+                title: Text("Développeur Flutter"),
+                onTap: () => Navigator.pop(context, "Développeur Flutter"),
+              ),
+              ListTile(
+                title: Text("Ingénieur logiciel"),
+                onTap: () => Navigator.pop(context, "Ingénieur logiciel"),
+              ),
+              // Ajoute d'autres postes ici
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _askUserForJobDocuments(String jobPosition) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    String userId = user?.uid ?? "inconnu";
+
+    // Demande le CV
+    String? cvPath = await _pickFile("Veuillez télécharger votre CV (PDF)");
+    if (cvPath == null) return;
+
+    String? cvUrl = await _uploadToCloudinary(cvPath);
+    if (cvUrl == null) return;
+
+    // Demande la lettre de motivation
+    String? coverLetterPath = await _pickFile(
+        "Veuillez télécharger votre lettre de motivation (PDF)");
+    if (coverLetterPath == null) return;
+
+    String? coverLetterUrl = await _uploadToCloudinary(coverLetterPath);
+    if (coverLetterUrl == null) return;
+
+    // Demande le dernier diplôme
+    String? diplomaPath =
+        await _pickFile("Veuillez télécharger votre dernier diplôme (PDF)");
+    if (diplomaPath == null) return;
+
+    String? diplomaUrl = await _uploadToCloudinary(diplomaPath);
+    if (diplomaUrl == null) return;
+    // Soumet la candidature
+    await _submitJobApplication(
+        userId, jobPosition, cvUrl, coverLetterUrl, diplomaUrl);
+  }
+
+  Future<void> _submitJobApplication(String userId, String jobPosition,
+      String cvUrl, String coverLetterUrl, String diplomaUrl) async {
+    // Soumettre les informations à la collection des candidatures pour un emploi
+    await FirebaseFirestore.instance.collection("jobApplications").add({
+      "userId": userId,
+      "jobPosition": jobPosition,
+      "cvUrl": cvUrl,
+      "coverLetterUrl": coverLetterUrl,
+      "diplomaUrl": diplomaUrl,
+      "timestamp": FieldValue.serverTimestamp(),
+    });
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Candidature pour un emploi soumise"),
+          content: Text(
+              "✅ Votre candidature pour le poste de $jobPosition a été soumise avec succès ! Un recruteur vous contactera si votre dossier est retenu."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -265,51 +397,6 @@ class _chatPageState extends State<chatPage> {
     await _submitApplication(
         userId, stageType, cvUrl, letterUrl, additionalDocUrl ?? "");
   }
-
-  /*Future<void> _askUserForDocuments(String stageType) async {
-    User? user = FirebaseAuth.instance.currentUser;
-    String userId = user?.uid ?? "inconnu";
-
-    // Demande le CV
-    String? cvPath = await _pickFile("Veuillez télécharger votre CV (PDF)");
-    if (cvPath == null) return;
-
-    String? cvUrl = await _uploadToCloudinary(cvPath);
-    if (cvUrl == null) return;
-
-    // Demande la lettre de motivation
-    String? letterPath = await _pickFile(
-        "Veuillez télécharger votre lettre de motivation (PDF)");
-    if (letterPath == null) return;
-
-    String? letterUrl = await _uploadToCloudinary(letterPath);
-    if (letterUrl == null) return;
-
-    // Documents supplémentaires en fonction du type de stage
-    String? additionalDocPath;
-    String? additionalDocUrl;
-
-    if (stageType == "Stage académique") {
-      additionalDocPath = await _pickFile(
-          "Veuillez télécharger votre certificat de scolarité (PDF)");
-    } else if (stageType == "Stage de recherche") {
-      additionalDocPath =
-          await _pickFile("Veuillez télécharger votre dernier diplôme (PDF)");
-    }
-
-    if (additionalDocPath != null) {
-      additionalDocUrl = await _uploadToCloudinary(additionalDocPath);
-      if (additionalDocUrl == null) {
-        print("Échec du téléversement du document supplémentaire."); // Débogage
-      }
-    } else {
-      additionalDocUrl = ""; // Aucun document supplémentaire
-    }
-
-    // Soumet la candidature
-    await _submitApplication(
-        userId, stageType, cvUrl, letterUrl, additionalDocUrl ?? "");
-  }*/
 
   Future<String?> _pickFile(String message) async {
     return await showDialog<String>(
