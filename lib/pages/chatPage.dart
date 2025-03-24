@@ -19,18 +19,13 @@ class _chatPageState extends State<chatPage> {
   String? _error;
 
   final String apiKey =
-      "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";
+      "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"; // Remplacez par votre clé API
   final String apiUrl = "https://openrouter.ai/api/v1/chat/completions";
   final String systemMessage =
-      "Tu es un assistant virtuel d'ENEO Cameroun. Réponds aux questions des utilisateurs en te basant sur le site officiel.";
+      "Vous êtes un assistant virtuel d'ENEO Cameroun.";
 
   final CloudinaryPublic cloudinary =
       CloudinaryPublic('dbjqlkk4r', 'documents');
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +41,7 @@ class _chatPageState extends State<chatPage> {
               },
             ),
           ),
-          if (_error != null)
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(_error!, style: TextStyle(color: Colors.red)),
-            ),
+          if (_error != null) _buildErrorMessage(_error!),
           ElevatedButton(
             onPressed: () async {
               await _showApplicationDialog();
@@ -75,6 +66,13 @@ class _chatPageState extends State<chatPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildErrorMessage(String error) {
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Text(error, style: TextStyle(color: Colors.red)),
     );
   }
 
@@ -115,18 +113,26 @@ class _chatPageState extends State<chatPage> {
           _messages.add(Message(text: botResponse, isUser: false));
         });
       } else {
-        setState(() {
-          _error = "Erreur ${response.statusCode}: ${response.body}";
-        });
+        _handleError(response);
       }
     } catch (e) {
+      _handleError(e);
+    } finally {
       setState(() {
-        _error = "Erreur de connexion: $e";
+        _isLoading = false;
       });
     }
+  }
 
+  void _handleError(dynamic error) {
+    String errorMessage;
+    if (error is http.Response) {
+      errorMessage = "Erreur ${error.statusCode}: ${error.body}";
+    } else {
+      errorMessage = "Erreur de connexion: $error";
+    }
     setState(() {
-      _isLoading = false;
+      _error = errorMessage;
     });
   }
 
@@ -157,7 +163,7 @@ class _chatPageState extends State<chatPage> {
           title: Text("Étapes du processus de candidature"),
           content: Text(
             "1. Sélectionner le type de stage.\n"
-            "2. Fournir les documents nécessaires (CV, dernier diplôme, etc.).\n"
+            "2. Fournir les documents nécessaires (CV, lettre de motivation, etc.).\n"
             "3. Soumettre votre candidature.\n\n"
             "Cliquez sur le bouton 'OK' pour continuer.",
           ),
@@ -214,20 +220,98 @@ class _chatPageState extends State<chatPage> {
     String? cvUrl = await _uploadToCloudinary(cvPath);
     if (cvUrl == null) return;
 
-    // Demande le dernier diplôme
-    String? diplomaPath =
-        await _pickFile("Veuillez télécharger votre dernier diplôme (PDF)");
-    if (diplomaPath == null) return;
+    // Afficher le message de confirmation pour le CV
+    await _showConfirmationDialog(
+        "Téléversement réussi", "Le CV a été téléversé avec succès !");
 
-    String? diplomaUrl = await _uploadToCloudinary(diplomaPath);
-    if (diplomaUrl == null) return;
+    // Demande la lettre de motivation
+    String? letterPath = await _pickFile(
+        "Veuillez télécharger votre lettre de motivation (PDF)");
+    if (letterPath == null) return;
+
+    String? letterUrl = await _uploadToCloudinary(letterPath);
+    if (letterUrl == null) return;
+
+    // Afficher le message de confirmation pour la lettre de motivation
+    await _showConfirmationDialog("Téléversement réussi",
+        "La lettre de motivation a été téléversée avec succès !");
+
+    // Documents supplémentaires en fonction du type de stage
+    String? additionalDocPath;
+    String? additionalDocUrl;
+
+    if (stageType == "Stage académique") {
+      additionalDocPath = await _pickFile(
+          "Veuillez télécharger votre certificat de scolarité (PDF)");
+    } else if (stageType == "Stage de recherche") {
+      additionalDocPath =
+          await _pickFile("Veuillez télécharger votre dernier diplôme (PDF)");
+    }
+
+    if (additionalDocPath != null) {
+      additionalDocUrl = await _uploadToCloudinary(additionalDocPath);
+      if (additionalDocUrl != null) {
+        // Afficher le message de confirmation pour le document supplémentaire
+        await _showConfirmationDialog("Téléversement réussi",
+            "Le document supplémentaire a été téléversé avec succès !");
+      } else {
+        print("Échec du téléversement du document supplémentaire."); // Débogage
+      }
+    } else {
+      additionalDocUrl = ""; // Aucun document supplémentaire
+    }
 
     // Soumet la candidature
-    await _submitApplication(userId, stageType, cvUrl, diplomaUrl);
+    await _submitApplication(
+        userId, stageType, cvUrl, letterUrl, additionalDocUrl ?? "");
   }
 
+  /*Future<void> _askUserForDocuments(String stageType) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    String userId = user?.uid ?? "inconnu";
+
+    // Demande le CV
+    String? cvPath = await _pickFile("Veuillez télécharger votre CV (PDF)");
+    if (cvPath == null) return;
+
+    String? cvUrl = await _uploadToCloudinary(cvPath);
+    if (cvUrl == null) return;
+
+    // Demande la lettre de motivation
+    String? letterPath = await _pickFile(
+        "Veuillez télécharger votre lettre de motivation (PDF)");
+    if (letterPath == null) return;
+
+    String? letterUrl = await _uploadToCloudinary(letterPath);
+    if (letterUrl == null) return;
+
+    // Documents supplémentaires en fonction du type de stage
+    String? additionalDocPath;
+    String? additionalDocUrl;
+
+    if (stageType == "Stage académique") {
+      additionalDocPath = await _pickFile(
+          "Veuillez télécharger votre certificat de scolarité (PDF)");
+    } else if (stageType == "Stage de recherche") {
+      additionalDocPath =
+          await _pickFile("Veuillez télécharger votre dernier diplôme (PDF)");
+    }
+
+    if (additionalDocPath != null) {
+      additionalDocUrl = await _uploadToCloudinary(additionalDocPath);
+      if (additionalDocUrl == null) {
+        print("Échec du téléversement du document supplémentaire."); // Débogage
+      }
+    } else {
+      additionalDocUrl = ""; // Aucun document supplémentaire
+    }
+
+    // Soumet la candidature
+    await _submitApplication(
+        userId, stageType, cvUrl, letterUrl, additionalDocUrl ?? "");
+  }*/
+
   Future<String?> _pickFile(String message) async {
-    // Affiche un dialogue pour demander à l'utilisateur de choisir un fichier
     return await showDialog<String>(
       context: context,
       builder: (context) {
@@ -272,26 +356,13 @@ class _chatPageState extends State<chatPage> {
     }
   }
 
-  Future<void> _submitApplication(
-      String userId, String stageType, String cvUrl, String diplomaUrl) async {
-    String collectionName =
-        stageType == "Stage académique" ? "acStage" : "rechStage";
-
-    await FirebaseFirestore.instance.collection(collectionName).add({
-      "userId": userId,
-      "stageType": stageType,
-      "cvUrl": cvUrl,
-      "diplomaUrl": diplomaUrl,
-      "timestamp": FieldValue.serverTimestamp(),
-    });
-
-    await showDialog(
+  Future<void> _showConfirmationDialog(String title, String message) async {
+    return showDialog<void>(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Candidature soumise"),
-          content: Text(
-              "✅ Votre candidature a été soumise avec succès ! Un recruteur vous contactera si votre dossier est retenu."),
+          title: Text(title),
+          content: Text(message),
           actions: [
             TextButton(
               onPressed: () {
@@ -303,6 +374,46 @@ class _chatPageState extends State<chatPage> {
         );
       },
     );
+  }
+
+  Future<void> _submitApplication(String userId, String stageType, String cvUrl,
+      String letterUrl, String additionalDocUrl) async {
+    String collectionName =
+        stageType == "Stage académique" ? "acStage" : "rechStage";
+
+    try {
+      await FirebaseFirestore.instance.collection(collectionName).add({
+        "userId": userId,
+        "stageType": stageType,
+        "cvUrl": cvUrl,
+        "letterUrl": letterUrl,
+        "additionalDocUrl": additionalDocUrl,
+        "timestamp": FieldValue.serverTimestamp(),
+      });
+
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Candidature soumise"),
+            content: Text(
+                "✅ Votre candidature a été soumise avec succès ! Un recruteur vous contactera si votre dossier est retenu."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (e) {
+      setState(() {
+        _error = "Erreur lors de la soumission : $e";
+      });
+    }
   }
 }
 
@@ -316,3 +427,4 @@ class Message {
 //API key: 184846136368251
 //API secret: jT13LPzypdJVp10EoVkO307GidA
 //API env variable: CLOUDINARY_URL=cloudinary://184846136368251:jT13LPzypdJVp10EoVkO307GidA@dbjqlkk4r
+//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
