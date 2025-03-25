@@ -66,13 +66,9 @@ class DashboardPage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircleAvatar(
-                    radius: 60,
-                    backgroundColor: Color.fromARGB(255, 27, 118, 187),
-                    child: CircleAvatar(
-                      radius: 55,
-                      backgroundImage: AssetImage('assets/images/logo.webp'),
-                    ),
+                  Image.asset(
+                    'assets/images/eneo.png',
+                    height: 110,
                   ),
                   SizedBox(height: 20), // Espacement entre le logo et le texte
                   Padding(

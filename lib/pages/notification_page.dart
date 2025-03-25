@@ -110,17 +110,6 @@ class _notificationState extends State<notification> {
                 ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(162, 20, 255, 28)),
-                    child: Text(
-                      "EMEX",
-                      style: TextStyle(color: Colors.black),
-                    )),
-                SizedBox(
-                  width: 20,
-                ),
-                ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.grey.shade200),
                     child: Text(
                       "JOBSITE",

@@ -6,13 +6,32 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
+import 'package:eneo_ai_project/pages/dashboard.dart';
 
-class chatPage extends StatefulWidget {
+class chatPage extends StatelessWidget {
   @override
-  _chatPageState createState() => _chatPageState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: ChatScreen(),
+      routes: {
+        // ignore: prefer_const_constructors
+        '/dashboard': (context) => Dashboard(),
+        '/chat': (context) => chatPage(),
+      },
+    );
+  }
 }
 
-class _chatPageState extends State<chatPage> {
+class ChatScreen extends StatefulWidget {
+  @override
+  _ChatScreenState createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
   final List<Message> _messages = [];
   final TextEditingController _controller = TextEditingController();
   bool _isLoading = false;
@@ -20,10 +39,10 @@ class _chatPageState extends State<chatPage> {
   String? _error;
 
   final String apiKey =
-      "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"; // Remplacez par votre clé API
+      "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"; // Remplacez par votre clé API
   final String apiUrl = "https://openrouter.ai/api/v1/chat/completions";
-  final String systemMessage =
-      "Vous êtes un assistant virtuel d'ENEO Cameroun.";
+  final String systemMessage = "Vous êtes un assistant virtuel d'ENEO Cameroun."
+      "Tu dois repondre aux questions de l'utilisateur par rapport à l'entreprise en te basant sur leur site officiel https://eneocameroon.cm/ ";
 
   final CloudinaryPublic cloudinary =
       CloudinaryPublic('dbjqlkk4r', 'documents');
@@ -31,7 +50,47 @@ class _chatPageState extends State<chatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('IA ENEO')),
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 27, 118, 187),
+        elevation: 0,
+        leading: Row(
+          children: [
+            IconButton(
+              icon: Icon(Icons.chevron_left, color: Colors.black),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Dashboard()),
+                );
+              },
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Image.asset(
+              'assets/images/eneo.jpeg',
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            const Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.end, //decaler vers la gauche
+              children: [
+                Padding(padding: EdgeInsets.only(top: 10)),
+                Text(
+                  'ENEO CHAT',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
       body: Column(
         children: [
           Expanded(
@@ -49,38 +108,83 @@ class _chatPageState extends State<chatPage> {
               child: LinearProgressIndicator(value: _uploadProgress),
             ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ElevatedButton(
-                onPressed: () async {
-                  await _showJobApplicationDialog();
-                },
-                child: Text("Postuler pour un emploi"),
+              SizedBox(
+                width: 180, // Largeur égale pour les boutons
+                height: 50, // Hauteur uniforme
+                child: ElevatedButton(
+                  onPressed: () async {
+                    await _showJobApplicationDialog();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        Color.fromARGB(255, 140, 198, 64), // Couleur du bouton
+                    foregroundColor: Colors.white, // Couleur du texte
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30), // Coins arrondis
+                    ),
+                  ),
+                  child: Text(
+                    "Postuler pour un emploi",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
-              SizedBox(width: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  await _showApplicationDialog();
-                },
-                child: Text("Postuler pour un stage"),
+              SizedBox(width: 20), // Espacement entre les boutons
+              SizedBox(
+                width: 180,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    await _showApplicationDialog();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 140, 198,
+                        64), // Couleur différente pour l'autre bouton
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  child: Text(
+                    "Postuler pour un stage",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
             ],
           ),
           Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: _isLoading
-                ? Center(child: CircularProgressIndicator())
-                : TextField(
-                    controller: _controller,
-                    onSubmitted: (_) => _sendMessage(),
-                    decoration: InputDecoration(
-                      hintText: "Posez votre question...",
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.send),
-                        onPressed: _sendMessage,
+                ? const Center(child: CircularProgressIndicator())
+                : Expanded(
+                    child: TextField(
+                      controller: _controller,
+                      onSubmitted: (_) => _sendMessage(),
+                      decoration: InputDecoration(
+                        hintText: "      entrer un message...",
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(50)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(50)),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.send),
+                          onPressed: _sendMessage,
+                        ),
                       ),
                     ),
                   ),
-          ),
+          )
         ],
       ),
     );
@@ -260,6 +364,10 @@ class _chatPageState extends State<chatPage> {
     String? cvUrl = await _uploadToCloudinary(cvPath);
     if (cvUrl == null) return;
 
+    // Afficher le message de confirmation pour le CV
+    await _showConfirmationDialog(
+        "Téléversement réussi", "Le CV a été téléversé avec succès !");
+
     // Demande la lettre de motivation
     String? coverLetterPath = await _pickFile(
         "Veuillez télécharger votre lettre de motivation (PDF)");
@@ -268,6 +376,10 @@ class _chatPageState extends State<chatPage> {
     String? coverLetterUrl = await _uploadToCloudinary(coverLetterPath);
     if (coverLetterUrl == null) return;
 
+    // Afficher le message de confirmation pour la lettre de motivation
+    await _showConfirmationDialog("Téléversement réussi",
+        "La lettre de motivation a été téléversée avec succès !");
+
     // Demande le dernier diplôme
     String? diplomaPath =
         await _pickFile("Veuillez télécharger votre dernier diplôme (PDF)");
@@ -275,6 +387,11 @@ class _chatPageState extends State<chatPage> {
 
     String? diplomaUrl = await _uploadToCloudinary(diplomaPath);
     if (diplomaUrl == null) return;
+
+    // Afficher le message de confirmation pour le dernier diplome
+    await _showConfirmationDialog(
+        "Téléversement réussi", "Le diplome a été téléversée avec succès !");
+
     // Soumet la candidature
     await _submitJobApplication(
         userId, jobPosition, cvUrl, coverLetterUrl, diplomaUrl);
@@ -283,7 +400,7 @@ class _chatPageState extends State<chatPage> {
   Future<void> _submitJobApplication(String userId, String jobPosition,
       String cvUrl, String coverLetterUrl, String diplomaUrl) async {
     // Soumettre les informations à la collection des candidatures pour un emploi
-    await FirebaseFirestore.instance.collection("jobApplications").add({
+    await FirebaseFirestore.instance.collection("job").add({
       "userId": userId,
       "jobPosition": jobPosition,
       "cvUrl": cvUrl,
@@ -589,4 +706,4 @@ class Message {
 //API key: 184846136368251
 //API secret: jT13LPzypdJVp10EoVkO307GidA
 //API env variable: CLOUDINARY_URL=cloudinary://184846136368251:jT13LPzypdJVp10EoVkO307GidA@dbjqlkk4r
-//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
+//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

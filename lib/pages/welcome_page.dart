@@ -162,7 +162,7 @@ class _WelcomePageState extends State<WelcomePage>
                 BlurredBackgroundIcon(),
                 SizedBox(height: 20),
                 Text(
-                  "Nous somme ravis de vous acceuillir dans l'application ENEO AI",
+                  "Nous somme ravis de vous acceuillir dans l'application ENEO CHAT",
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
