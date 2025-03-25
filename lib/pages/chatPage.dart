@@ -16,6 +16,7 @@ class _chatPageState extends State<chatPage> {
   final List<Message> _messages = [];
   final TextEditingController _controller = TextEditingController();
   bool _isLoading = false;
+  double _uploadProgress = 0.0;
   String? _error;
 
   final String apiKey =
@@ -42,6 +43,11 @@ class _chatPageState extends State<chatPage> {
             ),
           ),
           if (_error != null) _buildErrorMessage(_error!),
+          if (_uploadProgress > 0 && _uploadProgress < 1)
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: LinearProgressIndicator(value: _uploadProgress),
+            ),
           Row(
             children: [
               ElevatedButton(
@@ -50,9 +56,7 @@ class _chatPageState extends State<chatPage> {
                 },
                 child: Text("Postuler pour un emploi"),
               ),
-              SizedBox(
-                width: 20,
-              ),
+              SizedBox(width: 20),
               ElevatedButton(
                 onPressed: () async {
                   await _showApplicationDialog();
@@ -169,7 +173,7 @@ class _chatPageState extends State<chatPage> {
   Future<void> _showJobApplicationDialog() async {
     String? jobPosition;
 
-    await showDialog(
+    bool? isCanceled = await showDialog<bool>(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -183,14 +187,28 @@ class _chatPageState extends State<chatPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(
+                    false); // Retourne false pour indiquer que ce n'est pas annulé
               },
               child: Text("OK"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pop(true); // Retourne true pour indiquer l'annulation
+              },
+              child: Text("Annuler"),
             ),
           ],
         );
       },
     );
+
+    // Vérifiez si l'utilisateur a annulé
+    if (isCanceled == true) {
+      return; // Ne pas continuer si annulé
+    }
+
     jobPosition = await _askUserJobPosition();
     if (jobPosition != null) {
       await _askUserForJobDocuments(jobPosition);
@@ -206,7 +224,6 @@ class _chatPageState extends State<chatPage> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Ajoute ici une liste de postes disponibles ou une méthode pour les obtenir
               ListTile(
                 title: Text("Développeur Flutter"),
                 onTap: () => Navigator.pop(context, "Développeur Flutter"),
@@ -215,9 +232,18 @@ class _chatPageState extends State<chatPage> {
                 title: Text("Ingénieur logiciel"),
                 onTap: () => Navigator.pop(context, "Ingénieur logiciel"),
               ),
-              // Ajoute d'autres postes ici
+              // Ajoutez d'autres postes ici
             ],
           ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pop(); // Ferme le dialogue sans faire d'action
+              },
+              child: Text("Annuler"),
+            ),
+          ],
         );
       },
     );
@@ -288,7 +314,7 @@ class _chatPageState extends State<chatPage> {
   Future<void> _showApplicationDialog() async {
     String? stageType;
 
-    await showDialog(
+    bool? isCanceled = await showDialog<bool>(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -302,14 +328,27 @@ class _chatPageState extends State<chatPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(
+                    false); // Retourne false pour indiquer que ce n'est pas annulé
               },
               child: Text("OK"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pop(true); // Retourne true pour indiquer l'annulation
+              },
+              child: Text("Annuler"),
             ),
           ],
         );
       },
     );
+
+    // Vérifiez si l'utilisateur a annulé
+    if (isCanceled == true) {
+      return; // Ne pas continuer si annulé
+    }
 
     stageType = await _askUserStageType();
     if (stageType != null) {
@@ -336,6 +375,15 @@ class _chatPageState extends State<chatPage> {
               ),
             ],
           ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pop(); // Ferme le dialogue sans faire d'action
+              },
+              child: Text("Annuler"),
+            ),
+          ],
         );
       },
     );
@@ -422,6 +470,13 @@ class _chatPageState extends State<chatPage> {
               },
               child: Text("Choisir un PDF"),
             ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pop(); // Ferme le dialogue sans faire d'action
+              },
+              child: Text("Annuler"),
+            ),
           ],
         );
       },
@@ -430,14 +485,34 @@ class _chatPageState extends State<chatPage> {
 
   Future<String?> _uploadToCloudinary(String filePath) async {
     try {
+      setState(() {
+        _uploadProgress = 0.1;
+      });
+
       CloudinaryResponse response = await cloudinary.uploadFile(
         CloudinaryFile.fromFile(filePath,
             resourceType: CloudinaryResourceType.Raw),
+        onProgress: (count, total) {
+          setState(() {
+            _uploadProgress = count / total;
+          });
+        },
       );
+
+      setState(() {
+        _uploadProgress = 1.0;
+      });
+      await Future.delayed(
+          Duration(seconds: 1)); // Pour que la barre soit visible
+      setState(() {
+        _uploadProgress = 0.0;
+      });
+
       return response.secureUrl;
     } catch (e) {
       setState(() {
         _error = "Erreur lors du téléversement : $e";
+        _uploadProgress = 0.0;
       });
       return null;
     }
