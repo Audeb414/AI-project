@@ -39,7 +39,7 @@ class _ChatScreenState extends State<ChatScreen> {
   String? _error;
 
   final String apiKey =
-      "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"; // Remplacez par votre clé API
+      "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"; // Remplacez par votre clé API
   final String apiUrl = "https://openrouter.ai/api/v1/chat/completions";
   final String systemMessage = "Vous êtes un assistant virtuel d'ENEO Cameroun."
       "Tu dois repondre aux questions de l'utilisateur par rapport à l'entreprise en te basant sur leur site officiel https://eneocameroon.cm/ ";
@@ -706,4 +706,4 @@ class Message {
 //API key: 184846136368251
 //API secret: jT13LPzypdJVp10EoVkO307GidA
 //API env variable: CLOUDINARY_URL=cloudinary://184846136368251:jT13LPzypdJVp10EoVkO307GidA@dbjqlkk4r
-//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
+//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
